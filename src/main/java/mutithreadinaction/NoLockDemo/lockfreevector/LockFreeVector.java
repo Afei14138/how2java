@@ -5,7 +5,9 @@
  */
 package mutithreadinaction.NoLockDemo.lockfreevector;
 
+import java.util.AbstractList;
 import java.util.concurrent.atomic.AtomicIntegerArray;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
 public class LockFreeVector<E> {
@@ -17,10 +19,23 @@ public class LockFreeVector<E> {
     // 使用二维数组作为内部存储
     private final AtomicReferenceArray<AtomicReferenceArray<E>> buckets;
 
+    private final AtomicReference<Descriptor<E>> descriptor;
+
     // 定义Descriptor元素，使用CAS操作写入新数据
     static class Descriptor<E> {
         public int size;
-
+        volatile WriteDescriptor<E> writeop;
+        public Descriptor(int size, WriteDescriptor writeop){
+            this.size = size;
+            this.writeop = writeop;
+        }
+        public void completeWrite(){
+            WriteDescriptor<E> tmpOp = writeop;
+            if(tmpOp != null){
+                tmpOp.doIt();
+                writeop = null;
+            }
+        }
     }
 
     static class WriteDescriptor<E> {
@@ -36,7 +51,6 @@ public class LockFreeVector<E> {
             this.oldV = oldV;
             this.newV = newV;
         }
-
         public void doIt(){
             addr.compareAndSet(addr_ind, oldV, newV);
         }
@@ -45,6 +59,6 @@ public class LockFreeVector<E> {
     public LockFreeVector() {
         buckets = new AtomicReferenceArray<AtomicReferenceArray<E>>(N_BUCKET);
         buckets.set(0, new AtomicReferenceArray<E>(FIRST_BUCKET_SIZE));
-
+        descriptor = new AtomicReference<>(new Descriptor<E>(0,null));
     }
 }
