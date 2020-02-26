@@ -28,6 +28,7 @@ public class AutoStampedReferenceDemo {
                                 }
                             } else {
                                 System.out.println("余额大于20");
+                                // break防止线程退出
                                 break;
                             }
 
