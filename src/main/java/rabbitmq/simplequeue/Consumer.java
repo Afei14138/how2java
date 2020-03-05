@@ -1,8 +1,7 @@
-package rabbitmq.SimpleQueue;
+package rabbitmq.simplequeue;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.DeliverCallback;
 
 import java.io.IOException;

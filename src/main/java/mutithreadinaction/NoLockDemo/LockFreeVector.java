@@ -256,7 +256,6 @@ public class LockFreeVector<E> extends AbstractList<E> {
     public int size() {
         return descriptor.get().size;
     }
-
     /**
      * {@inheritDoc}
      */

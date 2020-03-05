@@ -1,4 +1,4 @@
-package rabbitmq.SimpleQueue;
+package rabbitmq.simplequeue;
 
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
