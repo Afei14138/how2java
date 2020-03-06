@@ -3,7 +3,7 @@
  * @Author: wpf
  * @Date: $
  */
-package rabbitmq.workqueuedemo;
+package rabbitmq.workfairqueue;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -21,6 +21,10 @@ public class Producer {
         Channel channel = connection.createChannel();
 
         channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+
+        //每个消费者在确认消息之前，消息队列不发送下一个消息到消费者，一次只发送一个
+        int prefetchCount = 1;
+        channel.basicQos(prefetchCount);
 
         for (int i = 0; i < 50; i++) {
             String msg = "hello" + i;
